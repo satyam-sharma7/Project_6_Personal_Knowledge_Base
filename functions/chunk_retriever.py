@@ -5,7 +5,7 @@ from chromadb.utils import embedding_functions
 DBclient = chromadb.PersistentClient(path="./my_chroma_data")
 em_fun = embedding_functions.SentenceTransformerEmbeddingFunction(model_name="all-MiniLM-L6-v2")
 
-def relevent_chunks(query: str, top_k=1, collection_name="my_embedded_chunks"):
+def relevent_chunks(query: str, top_k=3, collection_name="my_embedded_chunks"):
     collection = DBclient.get_collection(name=collection_name,
         embedding_function=em_fun
         )

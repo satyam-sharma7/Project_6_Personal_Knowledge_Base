@@ -3,10 +3,10 @@ from dotenv import load_dotenv
 import argparse
 import os
 
-from doc_extractor import extracted_content
-from chunker import recursive_split
-from store_embedding import store_chuks
-from chunk_retriever import relevent_chunks
+from functions.doc_extractor import extracted_content
+from functions.chunker import recursive_split
+from functions.store_embedding import store_chuks
+from functions.chunk_retriever import relevent_chunks
 
 parser = argparse.ArgumentParser()
 subparser = parser.add_subparsers(dest="command")
@@ -70,8 +70,6 @@ def retrieve(query: str):
         if query == "quit":
             break
 
-
-    
 
 if args.command == "ingest":
     store(args.docs)
