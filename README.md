@@ -51,8 +51,8 @@ A command-line RAG (Retrieval-Augmented Generation) tool that lets you ask quest
 
 ```
 Project_6-_Personal_Knowledge_Base/
-├── code/
-│   ├── main.py             # CLI entry point (ingest / query commands, chat loop)
+├── main.py                 # CLI entry point (ingest / query commands, chat loop)
+├── functions/
 │   ├── doc_extractor.py    # Reads PDF / MD / TXT files into plain text
 │   ├── chunker.py          # Recursive character text splitter with overlap
 │   ├── store_embedding.py  # Embeds chunks and writes them to ChromaDB
@@ -62,7 +62,7 @@ Project_6-_Personal_Knowledge_Base/
 │   ├── ds_writing_and_fe_guide.pdf
 │   └── story.txt
 ├── config.toml             # Model/provider settings (see note below)
-├── my_chroma_data/         # Persistent vector store (created on ingest)
+├── my_chroma_data/         # Persistent vector store (created on ingest, git-ignored)
 └── .gitignore
 ```
 
@@ -125,16 +125,16 @@ Get a key from [Google AI Studio](https://aistudio.google.com/). The `.env` file
 
 ## Usage
 
-> Run all commands **from the project root**, because the vector store path (`./my_chroma_data`) is relative to your working directory.
+> Run all commands **from the project root** (where `main.py` lives), because the vector store path (`./my_chroma_data`) is relative to your working directory.
 
 ### Ingest documents
 
 ```bash
 # a whole folder
-python code/main.py ingest --docs documents
+python main.py ingest --docs documents
 
 # a single file
-python code/main.py ingest --docs documents/story.txt
+python main.py ingest --docs documents/story.txt
 ```
 
 Ingesting the three bundled sample documents produces **155 chunks** (52 from the roadmap, 82 from the story, 21 from the PDF).
@@ -142,7 +142,7 @@ Ingesting the three bundled sample documents produces **155 chunks** (52 from th
 ### Ask questions
 
 ```bash
-python code/main.py query "What is Project 6 in the roadmap?"
+python main.py query "What is Project 6 in the roadmap?"
 ```
 
 After the first answer you get an interactive prompt:
@@ -157,7 +157,7 @@ Ask another question: <type here, or "quit" to exit>
 
 ## Configuration
 
-Chunking defaults live in `code/chunker.py`:
+Chunking defaults live in `functions/chunker.py`:
 
 | Parameter | Default | Meaning |
 |---|---|---|
@@ -165,7 +165,7 @@ Chunking defaults live in `code/chunker.py`:
 | `chunk_overlap` | `70` | Characters shared between consecutive chunks |
 | `separators` | `["\n\n", "\n", " ", ""]` | Split priority, coarse to fine |
 
-Retrieval depth is set by `top_k` (default `1`) in `chunk_retriever.py` and in the call inside `main.py`.
+Retrieval depth is set by `top_k` (default `1`) in `functions/chunk_retriever.py` and in the call inside `main.py`.
 
 `config.toml` lists model profiles (MiniMax, Gemini, GLM, Qwen) with provider, base URL, key name, temperature and max tokens. **It is not read by the current code**: `main.py` hardcodes Gemini. It is a reference for switching providers later.
 
@@ -193,7 +193,6 @@ Being upfront about where this version stops:
 - [ ] Upsert on ingest so edited files refresh cleanly
 - [ ] Load provider settings from `config.toml`
 - [ ] Add a `requirements.txt`
-- [ ] Remove committed `__pycache__` and `my_chroma_data/` from the repo (both are tracked despite `.gitignore`)
 - [ ] Add more file types (`.docx`, `.html`) and a `--reset` flag
 
 ---
